@@ -1,14 +1,18 @@
 var cluster = require('cluster');
-var http = require('http');
+var http    = require('http');
 var numCPUs = require('os').cpus().length;
-var app = require("../app");
 
-var http = require("http");
+numCPUs = 1;
+
+var app = require('../app');
+
 http.globalAgent.maxSockets = Number.MAX_VALUE;
 
 if (cluster.isMaster) {
 // Fork workers.
-    cluster.fork();
+    for (var i = 0; i < numCPUs; i++) {
+        cluster.fork();
+    }
 
     cluster.on('setup', function() {
         console.log('cluster.setupMaster() called');
@@ -24,8 +28,8 @@ if (cluster.isMaster) {
         console.log('\tid: ' + worker.id);
     });
 
-    cluster.on('listening', function(worker, address) {
-        console.log('worker ' + worker.process.pid + ' is listening on ' + address.port);
+    cluster.on('listening', function(worker, host) {
+        console.log('worker ' + worker.process.pid + ' is listening on ' + host.address + ':' + host.port);
         console.log('\tid: ' + worker.id);
     });
 
@@ -58,5 +62,6 @@ if (cluster.isMaster) {
     });
 
     app();
+
 }
 

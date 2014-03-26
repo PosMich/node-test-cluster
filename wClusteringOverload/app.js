@@ -1,14 +1,14 @@
 var cluster = require('cluster');
-var http = require('http');
-var numCPUs = require('os').cpus().length;
-var overload = 4;
+var http    = require('http');
+var numCPUs = require('os').cpus().length +4;
 
-var http = require("http");
+var app = require('../app');
+
 http.globalAgent.maxSockets = Number.MAX_VALUE;
 
 if (cluster.isMaster) {
 // Fork workers.
-    for (var i = 0; i < numCPUs+overload; i++) {
+    for (var i = 0; i < numCPUs; i++) {
         cluster.fork();
     }
 
@@ -26,8 +26,8 @@ if (cluster.isMaster) {
         console.log('\tid: ' + worker.id);
     });
 
-    cluster.on('listening', function(worker, address) {
-        console.log('worker ' + worker.process.pid + ' is listening on ' + address.port);
+    cluster.on('listening', function(worker, host) {
+        console.log('worker ' + worker.process.pid + ' is listening on ' + host.address + ':' + host.port);
         console.log('\tid: ' + worker.id);
     });
 
@@ -56,13 +56,10 @@ if (cluster.isMaster) {
 
     process.on('message', function(message) {
         console.log('Master says: ' + message);
-        //process.send('got it');
+        process.send('got it');
     });
 
-    http.createServer(function(req, res) {
-        //process.send('request')
-        res.writeHead(200);
-        res.end("hello world\n");
-    }).listen(8000);
+    app();
+
 }
 

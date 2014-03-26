@@ -1,10 +1,9 @@
 var cluster = require('cluster');
-var numCPUs = require('os').cpus().length;
-var app = require("../app");
-var reqCount = 0;
-var reqCount2 = 0;
+var http    = require('http');
+var numCPUs = require('os').cpus().length-1;
 
-var http = require("http");
+var app = require('../app');
+
 http.globalAgent.maxSockets = Number.MAX_VALUE;
 
 if (cluster.isMaster) {
@@ -48,27 +47,10 @@ if (cluster.isMaster) {
 
     Object.keys(cluster.workers).forEach(function(id) {
         cluster.workers[id].on('message', function(message) {
-            //console.log(id+': '+message);
-            if (message != 'request') {
-                console.log(id+' '+message);
-                return
-            }
-            ++reqCount;
-            if (reqCount%1000 == 0) {
-                console.log("master: "+reqCount);
-            }
+            console.log(message);
         });
     });
 } else {
-    // Workers can share any TCP connection
-    // In this case its a HTTP server
-
-    process.on('message', function(message) {
-        console.log('Master says: ' + message);
-        process.send('got it');
-    });
-
     app();
-
 }
 
