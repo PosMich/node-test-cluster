@@ -1,0 +1,19 @@
+{
+  "name": "Bakk2",
+  "version": "0.0.0",
+  "description": "Requests ohne Clustering     --> mehrere Apps gespawned, auf jeden Core? Requests mit Clustering     --> nur ein Worker     --> Worker Anzahl = CPU Anzahl     --> Worker Anzahl > CPU Anzahl",
+  "main": "app.js",
+  "dependencies": {
+    "seed-random": "~2.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:PosMich/bakk2-cluster.git"
+  },
+  "author": "Michael Poschacher",
+  "license": "ISC"
+}
