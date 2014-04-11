@@ -8,3 +8,10 @@ Requests mit Clustering
 
 RoundRobin
 comp
+
+
+cluster.multimediatechnology.at
+    mods
+        disable firewall
+        disable apparmor
+        remove apache2
